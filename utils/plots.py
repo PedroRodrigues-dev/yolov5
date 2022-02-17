@@ -104,6 +104,16 @@ class Annotator:
                 cv2.putText(self.im, label, (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, txt_color,
                             thickness=tf, lineType=cv2.LINE_AA)
 
+    def count_detections_label(self, det=[], names=[], color=(128, 128, 128), txt_color=(255, 255, 255)):
+        tf = max(self.lw - 1, 1)  # font thickness
+        position_y = 110
+        cv2.putText(self.im, 'Number of objects: {}'.format(len(det)), (10 , 30), 0, self.lw / 3, txt_color, thickness=tf, lineType=cv2.LINE_AA)
+        cv2.putText(self.im, 'Number of classes: {}'.format(len(det[:, -1].unique())), (10 , 70), 0, self.lw / 3, txt_color, thickness=tf, lineType=cv2.LINE_AA)
+        for c in det[:, -1].unique():
+            n = (det[:, -1] == c).sum()  # detections per class
+            cv2.putText(self.im, '{} {}'.format(n , names[int(c)]), (10 , position_y), 0, self.lw / 3, txt_color, thickness=tf, lineType=cv2.LINE_AA)
+            position_y += 40
+
     def rectangle(self, xy, fill=None, outline=None, width=1):
         # Add rectangle to image (PIL-only)
         self.draw.rectangle(xy, fill, outline, width)
